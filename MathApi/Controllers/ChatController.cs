@@ -1,9 +1,8 @@
 ﻿using MathApi.Models;
-using System;
+using MathApi.VIewModels;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace MathApi.Controllers
@@ -19,11 +18,20 @@ namespace MathApi.Controllers
         {
             return dataContext.Chats.ToList();
         }
-        public IEnumerable<Chat> Get(int id)
+        public IEnumerable<Chat> Get(int UserId)
         {
-            Post post = dataContext.Posts.ToList().FirstOrDefault(p => p.Id == id);
-
-            return dataContext.Chats.ToList();
+            IEnumerable<User> users = dataContext.Users.ToList();
+            IEnumerable<Chat> chats = dataContext.Chats.ToList();
+            IEnumerable<ChatUser> tmp = dataContext.ChatUser.ToList();
+            IEnumerable<ChatUser> chatsUsers = tmp.Where(u => u.UserId == UserId);
+            var chatsRes = 
+                from cu in chatsUsers
+                    join u in users on cu.UserId equals u.Id into table1
+                    from u in table1.ToList()
+                    join c in chats on cu.ChatId equals c.Id into table2
+                    from c in table2.ToList()
+                    select c;
+            return chatsRes;
         }
 
         // GET api/controllername/5
@@ -34,29 +42,46 @@ namespace MathApi.Controllers
         }
 */
         // POST api/controllername
-        public void Post([FromBody] Chat chat)
+        public IHttpActionResult Post([FromBody] JObject obj)
         {
-            if (chat != null)
+            List<int> userIds = obj["UserIds"].ToObject<List<int>>();
+            Chat chat= obj["Chat"].ToObject<Chat>();
+            try
             {
-                dataContext.Chats.Add(chat);
-                dataContext.SaveChanges();
+                if (userIds != null && chat != null)
+                {
+                    dataContext.Chats.Add(chat);
+                    dataContext.SaveChanges();
+                    foreach (var userId in userIds)
+                    {
+                        dataContext.ChatUser.Add(new ChatUser() { UserId = userId, ChatId = chat.Id });
+                    }
+
+                    dataContext.SaveChanges();
+                }
             }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
         
         // PUT api/controllername/5
-        public void Put(int id, [FromBody] Chat chat)
+        public IHttpActionResult Put(int id, [FromBody] Chat chat)
         {
             Chat findChat = dataContext.Chats.ToList().FirstOrDefault(c => c.Id == id);
             findChat.Name = chat.Name;
             findChat.PhotoPath = chat.PhotoPath;
-            dataContext.SaveChanges();
+            return Ok(dataContext.SaveChanges());
         }
 
         // DELETE api/controllername/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
             Chat findChat = dataContext.Chats.ToList().FirstOrDefault(c => c.Id == id);
-            dataContext.Chats.Remove(findChat);
+            return Ok(dataContext.Chats.Remove(findChat));
         }
     }
 }
+

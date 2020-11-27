@@ -1,9 +1,7 @@
 ﻿using MathApi.Models;
-using System;
+using MathApi.VIewModels;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace MathApi.Controllers
@@ -15,9 +13,21 @@ namespace MathApi.Controllers
         {
             dataContext = new DataContext();
         }
-        public IEnumerable<Post> Get()
+        public IEnumerable<PostUserViewModel> Get()
         {
-            return dataContext.Posts.ToList();
+            IEnumerable<User> users = dataContext.Users.ToList();
+            IEnumerable<Post> posts = dataContext.Posts.ToList();
+            var postsRes =
+                from p in posts
+                join u in users on p.AuthorId equals u.Id into table1
+                from u in table1.ToList()
+                select new PostUserViewModel
+                {
+                    Post = p,
+                    AuthorPhotoPath = u.PhotoPath,
+                    AuthorName = u.FirstName + " "  + u.FatherName
+                };
+            return postsRes;
         }
 
         // GET api/controllername/5
