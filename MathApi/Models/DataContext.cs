@@ -13,7 +13,11 @@ namespace MathApi.Models
         public DbSet<Chat> Chats { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ChatUser> ChatUser { get; set; }
+        public DbSet<PollUser> PollUser { get; set; }
         public DbSet<Settings> Settings { get; set; }
+        public DbSet<Poll> Polls { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
         public DataContext()
             : base()
         {

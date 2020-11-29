@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MathApi.Models
 {
@@ -8,5 +9,6 @@ namespace MathApi.Models
         public string Name { get; set; }
         public int AuthorId { get; set; }
         public DateTime PublicationTime { get; set; }
+        public IEnumerable<Question> Questions { get; set; }
     }
 }
