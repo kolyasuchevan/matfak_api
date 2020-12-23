@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace MathApi.Controllers
 {
+    [Authorize]
     public class PostController : ApiController
     {
         private DataContext dataContext;

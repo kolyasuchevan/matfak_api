@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Owin.Security.OAuth;
 using System.Web.Http;
 
 namespace MathApi
@@ -19,6 +17,8 @@ namespace MathApi
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
         }
     }
 }

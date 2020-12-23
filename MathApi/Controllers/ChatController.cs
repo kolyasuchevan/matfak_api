@@ -1,5 +1,4 @@
 ﻿using MathApi.Models;
-using MathApi.VIewModels;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Web.Http;
 
 namespace MathApi.Controllers
 {
+    [Authorize]
     public class ChatController : ApiController
     {
         private DataContext dataContext;

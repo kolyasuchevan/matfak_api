@@ -4,6 +4,7 @@ using System.Web.Http;
 
 namespace MathApi.Controllers
 {
+    [Authorize]
     public class SettingsController : ApiController
     {
         private DataContext dataContext;

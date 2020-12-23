@@ -6,6 +6,7 @@ using System.Web.Http;
 
 namespace MathApi.Controllers
 {
+    [Authorize]
     public class MessageController : ApiController
     {
         private DataContext dataContext;
@@ -31,7 +32,7 @@ namespace MathApi.Controllers
                 select new MessageUserViewModel
                 {
                     Message = m,
-                    AuthorName = u.FirstName + " " + u.FirstName,
+                    AuthorName = u.FirstName + " " + u.FatherName,
                     AuthorPhotoPath = u.PhotoPath
                 };
             return messagesRes;

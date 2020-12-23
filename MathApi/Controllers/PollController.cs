@@ -1,14 +1,12 @@
 ﻿using MathApi.Models;
 using MathApi.VIewModels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 
 namespace MathApi.Controllers
 {
+    [Authorize]
     public class PollController : ApiController
     {
         private DataContext dataContext;
